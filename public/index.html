@@ -6,13 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>WebRTC example</title>
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 
 <body>
     <h1>Hello!</h1>
-    <div id="status"></div>
+    <div class="inputs">
+        <input type="text" id="name" placeholder="Enter your name">
+        <button onclick="submitName()">Submit</button>
+    </div>
+    <div id="status">
+        Input your name
+    </div>
+    <div id="participants">
 
-    <video autoplay muted id="me"></video>
+    </div>
+
+    <video autoplay muted controls id="me" ></video>
+    <video autoplay muted controls id="them"></video>
 
     <script src="client/index.js"></script>
 </body>
