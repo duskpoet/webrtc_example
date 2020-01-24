@@ -22,21 +22,29 @@ window.submitName = () => {
 };
 
 socket.on("clients", clients => {
-  document.getElementById("participants").innerHTML = `<table>
+      document.getElementById("participants").innerHTML = `<table>
         ${Object.values(clients)
           .map(
             ({ name, id }) =>
-              `<tr>
-            <td>${name}</td>
-            <td><button onclick="callClient('${id}')">CALL</td>
-          </tr>`
-          )
-          .join("")}
-    </table>`;
+              ` < tr >
+        <
+        td > $ {
+          name
+        } < /td> <
+        td > < button onclick = "callClient('${id}')" > CALL < /td> <
+        /tr>`
+    )
+    .join("")
+  } <
+  /table>`;
 });
 
-pcIn.onicecandidate = ({ candidate }) =>  socket.emit('in candidate', candidate);
-pcOut.onicecandidate = ({ candidate }) =>  socket.emit('in candidate', candidate);
+pcIn.onicecandidate = ({
+  candidate
+}) => socket.emit('in candidate', candidate);
+pcOut.onicecandidate = ({
+  candidate
+}) => socket.emit('in candidate', candidate);
 window.callClient = async id => {
   const ms = await navigator.mediaDevices.getUserMedia(constraints)
   document.getElementById("me").srcObject = ms;
@@ -45,9 +53,15 @@ window.callClient = async id => {
   });
   const offer = await pcOut.createOffer();
   await pcOut.setLocalDescription(offer);
-  socket.emit("call offer", { id, offer });
+  socket.emit("call offer", {
+    id,
+    offer
+  });
 };
-socket.on("incoming offer", async ({offer, id}) => {
+socket.on("incoming offer", async ({
+  offer,
+  id
+}) => {
   await pcIn.setRemoteDescription(offer);
   const ms = await navigator.mediaDevices.getUserMedia(constraints)
   document.getElementById("me").srcObject = ms;
@@ -55,12 +69,20 @@ socket.on("incoming offer", async ({offer, id}) => {
     pcIn.addTrack(track, ms);
   });
   await pcIn.setLocalDescription(await pcIn.createAnswer())
-  socket.emit('call answer', { id, offer: pcIn.localDescription });
+  socket.emit('call answer', {
+    id,
+    offer: pcIn.localDescription
+  });
 });
-socket.on('incoming answer', ({id, offer}) => {
+socket.on('incoming answer', ({
+  id,
+  offer
+}) => {
   pcOut.setRemoteDescription(offer);
 });
 socket.on('out candidate', (candidate) => {
-  pcIn.addIceCandidate(candidate);
-  pcOut.addIceCandidate(candidate);
+  if (candidate) {
+    pcIn.addIceCandidate(candidate);
+    pcOut.addIceCandidate(candidate);
+  }
 });
